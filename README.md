@@ -38,8 +38,8 @@ fn main(){
 
 ### Functionalities
 
-[X] Profile : get default profile
-[X] Profile : get profiles
-[X] Follow  : does follow
-[X] Follow  : get followers
-[X] Follow  : get following
+- [X] Profile : get default profile
+- [X] Profile : get profiles
+- [X] Follow  : does follow
+- [X] Follow  : get followers
+- [X] Follow  : get following
