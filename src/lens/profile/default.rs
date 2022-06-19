@@ -10,18 +10,18 @@ pub struct Profile {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Data {
-    pub default_profile: DefaultProfile,
+    pub default_profile: Option<DefaultProfile>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DefaultProfile {
     pub id: String,
-    pub name: String,
-    pub bio: String,
+    pub name: Option<String>,
+    pub bio: Option<String>,
     pub is_default: bool,
     pub attributes: Vec<Value>,
-    pub metadata: Value,
+    pub metadata: Option<Value>,
     pub handle: String,
     pub picture: Picture,
     pub cover_picture: Value,
@@ -40,7 +40,7 @@ pub struct Picture {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Original {
-    pub url: String,
+    pub url: Option<String>,
     pub mime_type: Value,
 }
 

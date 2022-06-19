@@ -7,16 +7,18 @@ mod tests {
 
     #[test]
     pub fn test() {
-        let client = lens::LensClient::new(Chain::Polygon, Net::Main);
+        let client = lens::LensClient::new(Chain::Polygon, Net::Mumbai);
         let user_profiles = client.get_profiles_by_address(String::from(TEST_ADDRESS));
 
+        let mut profile_id = String::new();
         if let Ok(profile) = user_profiles {
             if profile.data.profiles.items.len() > 0 {
                 for item in profile.data.profiles.items {
                     println!("PROFILE ID: {:?}", item.id);
+                    profile_id = item.id;
                     println!("PROFILE NAME: {:?}", item.name);
 
-                    assert_eq!(item.handle, "gioele.lens");
+                    assert_eq!(item.handle, "gioele.test");
 
                     println!("PROFILE HANDLE: {:?}", item.handle);
                     println!("PROFILE OWNED_BY: {:?}", item.owned_by);
@@ -27,24 +29,30 @@ mod tests {
         }
 
         let default_profile = client.get_default_profile_by_address(String::from(TEST_ADDRESS));
-        let mut profile_id = String::new();
+        
 
         if let Ok(profile) = default_profile {
-            println!("DEFAULT PROFILE ID: {:?}", profile.data.default_profile.id);
-            profile_id = profile.data.default_profile.id;
-            assert_eq!(profile_id, "0x2dfb");
-            println!(
-                "DEFAULT PROFILE NAME: {:?}",
-                profile.data.default_profile.name
-            );
-            println!(
-                "DEFAULT PROFILE HANDLE: {:?}",
-                profile.data.default_profile.handle
-            );
-            println!(
-                "DEFAULT PROFILE OWNED_BY: {:?}",
-                profile.data.default_profile.owned_by
-            );
+            if profile.data.default_profile.is_some(){
+                let p = profile.data.default_profile.unwrap();
+                println!("DEFAULT PROFILE ID: {:?}", p.id);
+                profile_id = p.id;
+                assert_eq!(profile_id, "0x2c6d");
+                println!(
+                    "DEFAULT PROFILE NAME: {:?}",
+                    p.name
+                );
+                println!(
+                    "DEFAULT PROFILE HANDLE: {:?}",
+                    p.handle
+                );
+                println!(
+                    "DEFAULT PROFILE OWNED_BY: {:?}",
+                    p.owned_by
+                );
+            }else{
+                println!("No default profile found");
+            }
+           
         }
 
         let following = client.get_following(String::from(TEST_ADDRESS), 10);

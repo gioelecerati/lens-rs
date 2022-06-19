@@ -26,10 +26,10 @@ pub struct Profiles {
 #[serde(rename_all = "camelCase")]
 pub struct Item {
     pub id: String,
-    pub name: String,
-    pub bio: String,
+    pub name: Option<String>,
+    pub bio: Option<String>,
     pub attributes: Vec<Attribute>,
-    pub metadata: String,
+    pub metadata: Option<String>,
     pub is_default: bool,
     pub picture: Picture,
     pub handle: String,
@@ -60,7 +60,7 @@ pub struct Picture {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Original {
-    pub url: String,
+    pub url: Option<String>,
     pub mime_type: Value,
 }
 
