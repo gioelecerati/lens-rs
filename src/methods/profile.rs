@@ -1,5 +1,6 @@
 
 pub fn get_default_profile_by_address(
+    lens_client: &crate::lens::LensClient,
     address: String,
 ) -> Result<crate::lens::profile::default::Profile, String> {
     let queries = crate::graphql::queries::Queries::new();
@@ -16,7 +17,7 @@ pub fn get_default_profile_by_address(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = crate::lens::make_request(q) {
+        if let Ok(mut p) = lens_client.make_request(q) {
             if p.status().is_success() {
                 let profile_string = p.body_string().await.unwrap();
                 let profile_data: crate::lens::profile::default::Profile =
@@ -34,6 +35,7 @@ pub fn get_default_profile_by_address(
 }
 
 pub fn get_profiles_by_address(
+    lens_client: &crate::lens::LensClient,
     address: String,
 ) -> Result<crate::lens::profile::AddressProfiles, String> {
     let queries = crate::graphql::queries::Queries::new();
@@ -50,7 +52,7 @@ pub fn get_profiles_by_address(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = crate::lens::make_request(q) {
+        if let Ok(mut p) = lens_client.make_request(q) {
             if p.status().is_success() {
                 let profile_string = p.body_string().await.unwrap();
                 let profile_data: crate::lens::profile::AddressProfiles =

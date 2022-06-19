@@ -14,7 +14,7 @@ impl LensClient {
             crate::Chain::Polygon => match net {
                 crate::Net::Mumbai => LensClient {
                     queries: crate::graphql::queries::Queries::new(),
-                    endpoint: String::from("https://api.lens.mumbai"),
+                    endpoint: String::from("https://api-mumbai.lens.dev"),
                     chain: chain,
                     net: net,
                 },
@@ -32,7 +32,7 @@ impl LensClient {
         &self,
         address: String,
     ) -> Result<profile::default::Profile, String> {
-        let profile = crate::methods::profile::get_default_profile_by_address(address);
+        let profile = crate::methods::profile::get_default_profile_by_address(self, address);
         profile
     }
 
@@ -40,7 +40,7 @@ impl LensClient {
         &self,
         address: String,
     ) -> Result<profile::AddressProfiles, String> {
-        let profile = crate::methods::profile::get_profiles_by_address(address);
+        let profile = crate::methods::profile::get_profiles_by_address(self, address);
         profile
     }
 
@@ -49,7 +49,7 @@ impl LensClient {
         address: String,
         followee: String,
     ) -> Result<follow::DFollow, String> {
-        let follow = crate::methods::follow::does_follow(address, followee);
+        let follow = crate::methods::follow::does_follow(self, address, followee);
         follow
     }
 
@@ -58,7 +58,7 @@ impl LensClient {
         address: String,
         limit: u64,
     ) -> Result<follow::following::FollowingData, String> {
-        let follow = crate::methods::follow::get_following(address, limit);
+        let follow = crate::methods::follow::get_following(self, address, limit);
         follow
     }
 
@@ -67,17 +67,19 @@ impl LensClient {
         profile_id: String,
         limit: u64,
     ) -> Result<follow::followers::FollowersData, String> {
-        let follow = crate::methods::follow::get_followers_by_profile_id(profile_id, limit);
+        let follow = crate::methods::follow::get_followers_by_profile_id(self, profile_id, limit);
         follow
+    }
+
+    pub fn make_request(&self, q: crate::graphql::Query) -> Result<surf::Response, Option<String>> {
+        let mut res = Err(None);
+        let u = self.endpoint.clone();
+        async_std::task::block_on(async {
+            let response = surf::post(u).body_json(&q).unwrap().await.unwrap();
+            res = Ok(response);
+        });
+        res
     }
 }
 
-pub fn make_request(q: crate::graphql::Query) -> Result<surf::Response, Option<String>> {
-    let mut res = Err(None);
-    let u = crate::MAINNET;
-    async_std::task::block_on(async {
-        let response = surf::post(u).body_json(&q).unwrap().await.unwrap();
-        res = Ok(response);
-    });
-    res
-}
+

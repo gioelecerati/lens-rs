@@ -14,4 +14,3 @@ pub enum Net {
     Main,
 }
 
-const MAINNET: &'static str = "https://api.lens.dev";
