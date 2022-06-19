@@ -1,7 +1,8 @@
 # lens-rs
 
-Basic Rust client for https://lens.xyz
-
+Basic Rust client for https://lens.xyz  
+Just a draft, for now only the methods to retrieve profiles, followers and following.  
+The GraphQL query templates are currently hardcoded in to the code into grapql::queries
 ## Usage
 
 ```Rust
