@@ -17,7 +17,7 @@ mod tests {
                     println!("PROFILE NAME: {:?}", item.name);
 
                     assert_eq!(item.handle, "gioele.lens");
-                    
+
                     println!("PROFILE HANDLE: {:?}", item.handle);
                     println!("PROFILE OWNED_BY: {:?}", item.owned_by);
                 }
@@ -82,5 +82,11 @@ mod tests {
         }
 
         println!("FOLLOWERS LIST {:?}", followers_list);
+
+        if let Ok(challenge) = client.challenge(String::from(TEST_ADDRESS)) {
+            println!("CHALLENGE: {:?}", challenge);
+        }else{
+            println!("Unable to generate challenge");
+        }
     }
 }

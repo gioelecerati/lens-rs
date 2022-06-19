@@ -1,6 +1,7 @@
 pub struct Queries {
     pub profile: Profile,
     pub follow: Follow,
+    pub user: User,
 }
 
 pub struct Profile {
@@ -12,6 +13,10 @@ pub struct Follow {
     pub does_follow: String,
     pub get_following: String,
     pub get_followers: String,
+}
+
+pub struct User {
+    pub challenge: String,
 }
 
 impl Queries {
@@ -421,6 +426,13 @@ impl Queries {
                     }
                   }"#),
             },
+            user: User {
+                challenge: String::from(r#"query Challenge {
+                    challenge(request: { address: "%%ADDRESS%%" }) {
+                      text
+                    }
+                  }"#)
+            }
         }
     }
 }

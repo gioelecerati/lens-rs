@@ -1,5 +1,6 @@
 pub mod follow;
 pub mod profile;
+pub mod auth;
 
 pub struct LensClient {
     pub queries: crate::graphql::queries::Queries,
@@ -71,6 +72,13 @@ impl LensClient {
         follow
     }
 
+    pub fn challenge(
+        &self,
+        address: String,
+    ) -> Result<auth::AuthChallenge, String> {
+        let auth = crate::methods::auth::challenge(self, address);
+        auth
+    }
     pub fn make_request(&self, q: crate::graphql::Query) -> Result<surf::Response, Option<String>> {
         let mut res = Err(None);
         let u = self.endpoint.clone();
@@ -80,6 +88,7 @@ impl LensClient {
         });
         res
     }
+
 }
 
 
