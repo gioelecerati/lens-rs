@@ -1,12 +1,9 @@
-use std::fs;
-use std::path::Path;
 
 pub fn get_default_profile_by_address(
     address: String,
 ) -> Result<crate::lens::profile::default::Profile, String> {
     let queries = crate::graphql::queries::Queries::new();
-    let path = Path::new(&queries.profile.get_default_profile);
-    let query = fs::read_to_string(path).unwrap();
+    let query = queries.profile.get_default_profile;
 
     let mut profile = Err(String::new());
 
@@ -40,8 +37,7 @@ pub fn get_profiles_by_address(
     address: String,
 ) -> Result<crate::lens::profile::AddressProfiles, String> {
     let queries = crate::graphql::queries::Queries::new();
-    let path = Path::new(&queries.profile.get_profiles);
-    let query = fs::read_to_string(path).unwrap();
+    let query = queries.profile.get_profiles;
 
     let mut profile = Err(String::new());
 

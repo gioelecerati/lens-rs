@@ -1,13 +1,10 @@
-use std::fs;
-use std::path::Path;
 
 pub fn get_following(
     address: String,
     limit: u64,
 ) -> Result<crate::lens::follow::following::FollowingData, String> {
     let queries = crate::graphql::queries::Queries::new();
-    let path = Path::new(&queries.follow.get_following);
-    let query = fs::read_to_string(path).unwrap();
+    let query = queries.follow.get_following;
 
     let mut following = Err(String::new());
 
@@ -48,8 +45,7 @@ pub fn get_followers_by_profile_id(
     limit: u64,
 ) -> Result<crate::lens::follow::followers::FollowersData, String> {
     let queries = crate::graphql::queries::Queries::new();
-    let path = Path::new(&queries.follow.get_followers);
-    let query = fs::read_to_string(path).unwrap();
+    let query = queries.follow.get_followers;
 
     let mut followers = Err(String::new());
 
@@ -90,8 +86,7 @@ pub fn does_follow(
     followed_profile_id: String,
 ) -> Result<crate::lens::follow::DFollow, String> {
     let queries = crate::graphql::queries::Queries::new();
-    let path = Path::new(&queries.follow.does_follow);
-    let query = fs::read_to_string(path).unwrap();
+    let query = queries.follow.does_follow;
 
     let mut d_follow = Err(String::new());
 
