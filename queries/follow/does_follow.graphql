@@ -1,0 +1,14 @@
+query DoesFollow {
+  doesFollow(request: { 
+                followInfos: [
+                  {
+                    followerAddress: "%%ADDRESS%%",
+                    profileId: "%%PROFILE_ID%%"
+                  }
+                ] 
+             }) {
+    followerAddress
+    profileId
+    follows
+  }
+}
