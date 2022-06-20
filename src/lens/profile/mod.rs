@@ -5,6 +5,11 @@ pub mod create;
 pub mod default;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ProfileMetadata {
+    pub profile_picture_uri: Option<String>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AddressProfiles {
     pub data: Data,

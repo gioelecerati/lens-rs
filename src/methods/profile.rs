@@ -4,6 +4,7 @@ pub fn create_profile(
     lens_client: &crate::lens::LensClient,
     handle: String,
     follow_module: crate::lens::follow::FollowModule,
+    profile_metadata: Option<crate::lens::profile::ProfileMetadata>,
 ) -> Result<crate::lens::profile::create::CreateProfileData, String> {
     if lens_client.access_token.is_none() {
         return Err(String::from(
@@ -43,19 +44,30 @@ pub fn create_profile(
 
     let query = queries.profile.create_profile;
 
-    let q = crate::graphql::parse(
-        query,
-        vec![
-            crate::graphql::QVar {
-                name: "HANDLE".to_string(),
-                value: handle,
-            },
-            crate::graphql::QVar {
-                name: "FOLLOW_MODULE".to_string(),
-                value: follow_module_query.query,
-            },
-        ],
-    );
+    let mut variables = vec![
+        crate::graphql::QVar {
+            name: "HANDLE".to_string(),
+            value: handle,
+        },
+        crate::graphql::QVar {
+            name: "FOLLOW_MODULE".to_string(),
+            value: follow_module_query.query,
+        },
+    ];
+    let mut profile_picture_uri = String::from("null");
+    if profile_metadata.is_some() {
+        let p_metadata = profile_metadata.unwrap();
+        if p_metadata.profile_picture_uri.is_some() {
+            profile_picture_uri = format!("\"{}\"",p_metadata.profile_picture_uri.unwrap());
+        }
+    }
+
+    variables.append(&mut vec![crate::graphql::QVar {
+        name: "PROFILE_PICTURE_URI".to_string(),
+        value: profile_picture_uri,
+    }]);
+
+    let q = crate::graphql::parse(query, variables);
 
     let mut created_profile = Err(String::new());
     async_std::task::block_on(async {

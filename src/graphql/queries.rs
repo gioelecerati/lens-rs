@@ -60,7 +60,7 @@ impl Queries {
                     r#"mutation CreateProfile {
                     createProfile(request:{ 
                                   handle: "%%HANDLE%%",
-                                  profilePictureUri: null,
+                                  profilePictureUri: %%PROFILE_PICTURE_URI%%,
                                   followNFTURI: null,
                                   followModule: %%FOLLOW_MODULE%%
                                   }) {

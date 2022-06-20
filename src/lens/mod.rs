@@ -149,6 +149,7 @@ impl LensClient {
     pub fn create_profile(
         &self,
         handle: String,
+        profile: Option<crate::lens::profile::ProfileMetadata>,
     ) -> Result<crate::lens::profile::create::CreateProfileData, String> {
         let created_profile = crate::methods::profile::create_profile(
             self,
@@ -159,6 +160,7 @@ impl LensClient {
                 value: None,
                 recipient: None,
             },
+            profile,
         );
         created_profile
     }

@@ -131,7 +131,7 @@ mod tests {
 
         println!("Login result: {:?}", login_result);
         let handle = user_address.clone()[2..10].to_lowercase();
-        let created_profile = client.create_profile(handle.clone()).unwrap();
+        let created_profile = client.create_profile(handle.clone(), None).unwrap();
 
         println!(
             "Profile creating with handle {}, transaction hash: {} ",
