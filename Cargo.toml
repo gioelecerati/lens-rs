@@ -7,6 +7,10 @@ license = "MIT"
 homepage = ""
 repository = "https://github.com/gioelecerati/lens-rs"
 readme = "README.md"
+exclude = [
+    "queries/*",
+    "test/*",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
