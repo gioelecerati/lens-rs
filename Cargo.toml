@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 description = "Lens Protocol API client"
 license = "MIT"
-homepage = ""
 repository = "https://github.com/gioelecerati/lens-rs"
 readme = "README.md"
 exclude = [

@@ -1,8 +1,12 @@
-# lens-rs
-
 Rust client crate for https://lens.xyz  
 Just a draft. See on the bottom to see which APIs it currently supports.
-The GraphQL query templates are currently hardcoded in to the code into grapql::queries
+
+<p align="center">
+  <h2 align="center">lens-rs</a></h3>
+  <a href="https://crates.io/crates/lens-rs"><img src="https://img.shields.io/badge/crates.io-v0.1.9-orange.svg?longCache=true" alt="0.1.0" title="lens-rs’s current version badge"></a>
+  <p align="center">Rust client crate for https://lens.xyz </a></p>
+</p>
+
 ## Usage
 
 ```Rust
