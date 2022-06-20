@@ -2,20 +2,20 @@ Rust client crate for https://lens.xyz
 Just a draft. See on the bottom to see which APIs it currently supports.
 
 <p align="center">
-  <h2 align="center">lens-rs</a></h3>
-  <a href="https://crates.io/crates/lens-rs"><img src="https://img.shields.io/badge/crates.io-v0.1.9-orange.svg?longCache=true" alt="0.1.0" title="lens-rs’s current version badge"></a>
+  <h2 align="center">lens-client</a></h3>
+  <a href="https://crates.io/crates/lens-client"><img src="https://img.shields.io/badge/crates.io-v0.1.9-orange.svg?longCache=true" alt="0.1.0" title="lens-client current version badge"></a>
   <p align="center">Rust client crate for https://lens.xyz </a></p>
 </p>
 
 ## Usage
 
 ```Rust
-use lens_rs;
-use lens_rs::{Chain, Net};
+use lens_client;
+use lens_client::{Chain, Net};
 
 fn main(){
     let address = "0x0000000000000000000000000000000000000000";
-    let client = lens_rs::lens::LensClient::new(Chain::Polygon, Net::Main);
+    let client = lens_client::lens::LensClient::new(Chain::Polygon, Net::Main);
 
     let default_profile = client.get_default_profile_by_address(String::from(address));
 
