@@ -5,6 +5,7 @@ pub struct Queries {
 }
 
 pub struct Profile {
+    pub create_profile: String,
     pub get_default_profile: String,
     pub get_profiles: String,
 }
@@ -15,15 +16,66 @@ pub struct Follow {
     pub get_followers: String,
 }
 
-pub struct User {
-    pub challenge: String,
+pub struct Module {
+    pub follow_module: String,
+    pub fee_follow_module: String,
 }
 
+pub struct User {
+    pub challenge: String,
+    pub login: String,
+}
+
+impl Module {
+    pub fn new() -> Module {
+        Module {
+            follow_module: String::from(
+                r#"{
+                freeFollowModule: true
+             }"#,
+            ),
+            fee_follow_module: String::from(
+                r#"{
+                feeFollowModule: {
+                       amount: {
+                           currency: "%%CURRENCY%%",
+                           value: "%%VALUE%%"
+                       },
+                       recipient: "%%RECIPIENT%%"
+                }
+            }"#,
+            ),
+        }
+    }
+}
+
+/// The GraphQL queries are hardcoded as templates here.
+/// Could be probably smarter using a proper library for this
+/// but this is a quick and dirty solution.
 impl Queries {
     pub fn new() -> Queries {
         Queries {
             profile: Profile {
-                get_default_profile: String::from(r#"query DefaultProfile {
+                create_profile: String::from(
+                    r#"mutation CreateProfile {
+                    createProfile(request:{ 
+                                  handle: "%%HANDLE%%",
+                                  profilePictureUri: null,
+                                  followNFTURI: null,
+                                  followModule: %%FOLLOW_MODULE%%
+                                  }) {
+                      ... on RelayerResult {
+                        txHash
+                      }
+                      ... on RelayError {
+                        reason
+                      }
+                      __typename
+                    }
+                  }"#,
+                ),
+                get_default_profile: String::from(
+                    r#"query DefaultProfile {
                     defaultProfile(request: { ethereumAddress: "%%ADDRESS%%"}) {
                       id
                       name
@@ -104,8 +156,10 @@ impl Queries {
                         }
                       }
                     }
-                  }"#),
-                get_profiles: String::from(r#"query Profiles {
+                  }"#,
+                ),
+                get_profiles: String::from(
+                    r#"query Profiles {
                     profiles(request: { ownedBy: ["%%ADDRESS%%"], limit: 10 }) {
                       items {
                         id
@@ -192,10 +246,12 @@ impl Queries {
                         totalCount
                       }
                     }
-                  }"#),
+                  }"#,
+                ),
             },
             follow: Follow {
-                does_follow: String::from(r#"query DoesFollow {
+                does_follow: String::from(
+                    r#"query DoesFollow {
                     doesFollow(request: { 
                                   followInfos: [
                                     {
@@ -208,8 +264,10 @@ impl Queries {
                       profileId
                       follows
                     }
-                  }"#),
-                get_following: String::from(r#"query Following {
+                  }"#,
+                ),
+                get_following: String::from(
+                    r#"query Following {
                     following(request: { 
                                   address: "%%ADDRESS%%",
                                 limit: %%LIMIT%%
@@ -328,8 +386,10 @@ impl Queries {
                         totalCount
                       }
                     }
-                  }"#),
-                get_followers: String::from(r#"query Followers {
+                  }"#,
+                ),
+                get_followers: String::from(
+                    r#"query Followers {
                     followers(request: { 
                                   profileId: "%%PROFILE_ID%%",
                                 limit: %%LIMIT%%
@@ -424,15 +484,29 @@ impl Queries {
                         totalCount
                       }
                     }
-                  }"#),
+                  }"#,
+                ),
             },
             user: User {
-                challenge: String::from(r#"query Challenge {
+                challenge: String::from(
+                    r#"query Challenge {
                     challenge(request: { address: "%%ADDRESS%%" }) {
                       text
                     }
-                  }"#)
-            }
+                  }"#,
+                ),
+                login: String::from(
+                    r#"mutation Authenticate {
+                  authenticate(request: {
+                    address: "%%ADDRESS%%",
+                    signature: "%%SIGNATURE%%"
+                  }) {
+                    accessToken
+                    refreshToken
+                  }
+                }"#,
+                ),
+            },
         }
     }
 }

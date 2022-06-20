@@ -1,7 +1,7 @@
 # lens-rs
 
-Basic Rust client for https://lens.xyz  
-Just a draft, for now only the methods to retrieve profiles, followers and following.  
+Rust client crate for https://lens.xyz  
+Just a draft. See on the bottom to see which APIs it currently supports.
 The GraphQL query templates are currently hardcoded in to the code into grapql::queries
 ## Usage
 
@@ -39,8 +39,16 @@ fn main(){
 
 ### Functionalities
 
+#### Profile
 - [X] Profile : get default profile
 - [X] Profile : get profiles
+- [X] Profile : create profile
+#### Follow
 - [X] Follow  : does follow
 - [X] Follow  : get followers
-- [X] Follow  : get following
+- [X] Follow  : get following 
+#### Auth
+- [X] Auth    : get challenge
+- [X] Auth    : login
+
+This crate integrates some functions to handle local KeyStores and use them to interact with Lens, mostly useful for development purposes.

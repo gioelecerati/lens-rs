@@ -22,3 +22,19 @@ pub struct DoesFollow {
     pub profile_id: String,
     pub follows: bool,
 }
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum FollowModuleType {
+    Free,
+    Fee
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FollowModule {
+    pub follow_type: FollowModuleType,
+    pub currency: Option<String>,
+    pub value: Option<String>,
+    pub recipient: Option<String>,
+}

@@ -1,21 +1,21 @@
 use serde::{Deserialize, Serialize};
 
-pub mod login;
-
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AuthChallenge {
+pub struct CreateProfileData {
     pub data: Data,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Data {
-    pub challenge: Challenge,
+    pub create_profile: CreateProfile,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Challenge {
-    pub text: String,
+pub struct CreateProfile {
+    pub tx_hash: String,
+    #[serde(rename = "__typename")]
+    pub typename: String,
 }

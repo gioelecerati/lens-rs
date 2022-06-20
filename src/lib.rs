@@ -1,3 +1,4 @@
+pub mod crypto;
 pub mod graphql;
 pub mod lens;
 pub mod methods;
@@ -13,4 +14,3 @@ pub enum Net {
     Mumbai,
     Main,
 }
-
