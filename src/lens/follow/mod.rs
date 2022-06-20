@@ -27,7 +27,7 @@ pub struct DoesFollow {
 #[serde(rename_all = "camelCase")]
 pub enum FollowModuleType {
     Free,
-    Fee
+    Fee,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

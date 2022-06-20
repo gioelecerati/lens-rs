@@ -129,7 +129,11 @@ impl LensClient {
     /// * `signature` - The signature of the challenge to login to Lens
     /// # Returns
     /// * `Result<auth::login::Login, String>` - The auth token to login to Lens
-    pub fn login(&mut self, address: String, signature: String) -> Result<auth::login::Login, String> {
+    pub fn login(
+        &mut self,
+        address: String,
+        signature: String,
+    ) -> Result<auth::login::Login, String> {
         let auth = crate::methods::auth::login(self, address, signature);
         self.access_token = Some(auth.clone().unwrap().data.authenticate.access_token);
         self.refresh_token = Some(auth.clone().unwrap().data.authenticate.refresh_token);
@@ -142,17 +146,28 @@ impl LensClient {
     /// * `handle` - The handle of the user
     /// # Returns
     /// * `Result<crate::lens::profile::create::CreateProfileData, String>` - Data with transaction hash of profile creation
-    pub fn create_profile(&self, handle: String) -> Result<crate::lens::profile::create::CreateProfileData, String> {
-        let created_profile = crate::methods::profile::create_profile(self, handle, crate::lens::follow::FollowModule{
-            follow_type: crate::lens::follow::FollowModuleType::Free,
-            currency: None,
-            value: None,
-            recipient: None,
-        });
+    pub fn create_profile(
+        &self,
+        handle: String,
+    ) -> Result<crate::lens::profile::create::CreateProfileData, String> {
+        let created_profile = crate::methods::profile::create_profile(
+            self,
+            handle,
+            crate::lens::follow::FollowModule {
+                follow_type: crate::lens::follow::FollowModuleType::Free,
+                currency: None,
+                value: None,
+                recipient: None,
+            },
+        );
         created_profile
     }
 
-    pub fn make_request(&self, q: crate::graphql::Query, headers: Option<Vec<serde_json::Value>>) -> Result<surf::Response, Option<String>> {
+    pub fn make_request(
+        &self,
+        q: crate::graphql::Query,
+        headers: Option<Vec<serde_json::Value>>,
+    ) -> Result<surf::Response, Option<String>> {
         let mut res = Err(None);
         let u = self.endpoint.clone();
         async_std::task::block_on(async {

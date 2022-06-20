@@ -16,7 +16,7 @@ pub fn challenge(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = lens_client.make_request(q,None) {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
             if p.status().is_success() {
                 let challeng_string = p.body_string().await.unwrap();
                 let challenge_data: crate::lens::auth::AuthChallenge =
@@ -58,7 +58,7 @@ pub fn login(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = lens_client.make_request(q,None) {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
             if p.status().is_success() {
                 let login_string = p.body_string().await.unwrap();
                 let login_data: crate::lens::auth::login::Login =

@@ -133,7 +133,10 @@ mod tests {
         let handle = user_address.clone()[2..10].to_lowercase();
         let created_profile = client.create_profile(handle.clone()).unwrap();
 
-        println!("Profile creating with handle {}, transaction hash: {} ", handle, created_profile.data.create_profile.tx_hash);
+        println!(
+            "Profile creating with handle {}, transaction hash: {} ",
+            handle, created_profile.data.create_profile.tx_hash
+        );
 
         let get_profiles = client.get_profiles_by_address(user_address.clone());
 
@@ -149,8 +152,5 @@ mod tests {
                 println!("No profiles found");
             }
         }
-
-
     }
-
 }

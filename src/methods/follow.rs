@@ -23,7 +23,7 @@ pub fn get_following(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = lens_client.make_request(q,None) {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
             if p.status().is_success() {
                 let following_string = p.body_string().await.unwrap();
                 let following_data: crate::lens::follow::following::FollowingData =
@@ -65,7 +65,7 @@ pub fn get_followers_by_profile_id(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = lens_client.make_request(q,None) {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
             if p.status().is_success() {
                 let followers_string = p.body_string().await.unwrap();
                 let followers_data: crate::lens::follow::followers::FollowersData =
@@ -107,7 +107,7 @@ pub fn does_follow(
     );
 
     async_std::task::block_on(async {
-        if let Ok(mut p) = lens_client.make_request(q,None) {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
             if p.status().is_success() {
                 let follow_string = p.body_string().await.unwrap();
                 let follow_data: crate::lens::follow::DFollow =
