@@ -25,12 +25,17 @@ pub struct Wallet {
 pub fn generate_wallet(
     path: String,
     password: String,
-    name: Option<&str>,
+    wallet_name: Option<&str>,
     with_keys: bool,
 ) -> Result<Wallet, eth_keystore::KeystoreError> {
     let mut rng = rand::thread_rng();
     let dir = Path::new(&path);
-    let (_private_key, name) = eth_keystore::new(dir, &mut rng, password.clone(), name)?;
+    let (_private_key, name) = eth_keystore::new(dir, &mut rng, password.clone(), wallet_name)?;
+
+    let mut name = name;
+    if wallet_name.is_some() {
+        name = wallet_name.unwrap().to_string();
+    }
 
     let mut file = std::fs::File::open(format!("{}/{}", path, name))?;
     let mut contents = String::new();

@@ -1,9 +1,9 @@
-Rust client crate for https://lens.xyz  
-Just a draft. See on the bottom to see which APIs it currently supports.
+Rust client crate for https://lens.xyz API
+See on the bottom to see what this currently supports.
 
 <p align="center">
   <h2 align="center">lens-client</a></h3>
-  <a href="https://crates.io/crates/lens-client"><img src="https://img.shields.io/badge/crates.io-v0.1.9-orange.svg?longCache=true" alt="0.1.0" title="lens-client current version badge"></a>
+  <a href="https://crates.io/crates/lens-client"><img src="https://img.shields.io/badge/crates.io-v0.1.0-orange.svg?longCache=true" alt="0.1.0" title="lens-client current version badge"></a>
   <p align="center">Rust client crate for https://lens.xyz </a></p>
 </p>
 
@@ -47,6 +47,7 @@ fn main(){
 - [X] Profile : get default profile
 - [X] Profile : get profiles
 - [X] Profile : create profile
+- [X] Profile : get recommended profiles
 #### Follow
 - [X] Follow  : does follow
 - [X] Follow  : get followers

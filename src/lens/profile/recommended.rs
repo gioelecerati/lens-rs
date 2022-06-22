@@ -1,46 +1,31 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-pub mod create;
-pub mod default;
-pub mod recommended;
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ProfileMetadata {
-    pub profile_picture_uri: Option<String>,
-}
-
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AddressProfiles {
+pub struct RecommendedProfilesData {
     pub data: Data,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Data {
-    pub profiles: Profiles,
+    pub recommended_profiles: Vec<RecommendedProfile>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Profiles {
-    pub items: Vec<Item>,
-    pub page_info: PageInfo,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Item {
+pub struct RecommendedProfile {
     pub id: String,
     pub name: Option<String>,
     pub bio: Option<String>,
     pub attributes: Vec<Attribute>,
+    pub follow_nft_address: String,
     pub metadata: Option<String>,
     pub is_default: bool,
     pub picture: Option<Picture>,
     pub handle: String,
-    pub cover_picture: Value,
+    pub cover_picture: Option<CoverPicture>,
     pub owned_by: String,
     pub dispatcher: Value,
     pub stats: Stats,
@@ -50,8 +35,8 @@ pub struct Item {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Attribute {
-    pub display_type: String,
-    pub trait_type: Value,
+    pub display_type: Value,
+    pub trait_type: String,
     pub key: String,
     pub value: String,
 }
@@ -67,7 +52,22 @@ pub struct Picture {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Original {
-    pub url: Option<String>,
+    pub url: String,
+    pub mime_type: Value,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CoverPicture {
+    pub original: Original2,
+    #[serde(rename = "__typename")]
+    pub typename: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Original2 {
+    pub url: String,
     pub mime_type: Value,
 }
 
@@ -81,12 +81,4 @@ pub struct Stats {
     pub total_mirrors: i64,
     pub total_publications: i64,
     pub total_collects: i64,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PageInfo {
-    pub prev: String,
-    pub next: String,
-    pub total_count: i64,
 }

@@ -3,7 +3,6 @@ pub mod follow;
 pub mod profile;
 
 pub struct LensClient {
-    pub queries: crate::graphql::queries::Queries,
     pub endpoint: String,
     pub chain: crate::Chain,
     pub net: crate::Net,
@@ -23,7 +22,6 @@ impl LensClient {
         match chain {
             crate::Chain::Polygon => match net {
                 crate::Net::Mumbai => LensClient {
-                    queries: crate::graphql::queries::Queries::new(),
                     endpoint: String::from("https://api-mumbai.lens.dev"),
                     chain: chain,
                     net: net,
@@ -31,7 +29,6 @@ impl LensClient {
                     refresh_token: None,
                 },
                 crate::Net::Main => LensClient {
-                    queries: crate::graphql::queries::Queries::new(),
                     endpoint: String::from("https://api.lens.dev"),
                     chain: chain,
                     net: net,
@@ -66,6 +63,16 @@ impl LensClient {
     ) -> Result<profile::AddressProfiles, String> {
         let profile = crate::methods::profile::get_profiles_by_address(self, address);
         profile
+    }
+
+    /// Get the recommended profiles
+    /// # Returns
+    /// * `Result<profile::recommended::RecommendedProfilesData, String>` - The recommended profiles
+    pub fn get_recommended_profiles(
+        &self,
+    ) -> Result<profile::recommended::RecommendedProfilesData, String> {
+        let profiles = crate::methods::profile::get_recommended_profiles(self);
+        profiles
     }
 
     /// Get status of follow of a address to a profile id

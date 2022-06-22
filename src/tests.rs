@@ -89,9 +89,35 @@ mod tests {
 
     #[test]
     fn test_new_user() {
-        let wallet =
-            crypto::generate_wallet(String::from("/tmp"), String::from("password"), None, true)
-                .unwrap();
+        let folder_path = "/tmp";
+        let file_name = "lens_rs_wallet";
+
+        let mut w: Option<crate::crypto::Wallet> = None;
+
+        if std::path::Path::new(&format!("{}/{}", folder_path, file_name)).exists() {
+            w = Some(
+                crate::crypto::load_wallet(
+                    &folder_path.to_string(),
+                    &file_name.to_string(),
+                    String::from("password"),
+                )
+                .unwrap(),
+            );
+        } else {
+            w = Some(
+                crypto::generate_wallet(
+                    String::from(folder_path),
+                    String::from("password"),
+                    Some(&file_name),
+                    true,
+                )
+                .unwrap(),
+            );
+        }
+
+        let wallet = w.unwrap();
+
+        println!("{:?}", wallet.address);
 
         let user_address = wallet.address.clone();
 
@@ -131,12 +157,14 @@ mod tests {
 
         println!("Login result: {:?}", login_result);
         let handle = user_address.clone()[2..10].to_lowercase();
-        let created_profile = client.create_profile(handle.clone(), None).unwrap();
-
-        println!(
-            "Profile creating with handle {}, transaction hash: {} ",
-            handle, created_profile.data.create_profile.tx_hash
-        );
+        if let Ok(created_profile) = client.create_profile(handle.clone(), None) {
+            println!(
+                "Profile creating with handle {}, transaction hash: {} ",
+                handle, created_profile.data.create_profile.tx_hash
+            );
+        } else {
+            println!("Unable to create profile");
+        };
 
         let get_profiles = client.get_profiles_by_address(user_address.clone());
 
@@ -152,5 +180,12 @@ mod tests {
                 println!("No profiles found");
             }
         }
+    }
+
+    #[test]
+    fn test_recommended_profiles() {
+        let lens_client = lens::LensClient::new(Chain::Polygon, Net::Mumbai);
+        let recommended_profiles = lens_client.get_recommended_profiles();
+        println!("Recommended profiles: {:?}", recommended_profiles);
     }
 }

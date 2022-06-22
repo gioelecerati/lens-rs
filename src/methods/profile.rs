@@ -58,7 +58,7 @@ pub fn create_profile(
     if profile_metadata.is_some() {
         let p_metadata = profile_metadata.unwrap();
         if p_metadata.profile_picture_uri.is_some() {
-            profile_picture_uri = format!("\"{}\"",p_metadata.profile_picture_uri.unwrap());
+            profile_picture_uri = format!("\"{}\"", p_metadata.profile_picture_uri.unwrap());
         }
     }
 
@@ -80,9 +80,14 @@ pub fn create_profile(
         ) {
             if p.status().is_success() {
                 let created_profile_string = p.body_string().await.unwrap();
-                let created_profile_data: crate::lens::profile::create::CreateProfileData =
-                    serde_json::from_str(&created_profile_string).unwrap();
-                created_profile = Ok(created_profile_data);
+                // if HANDLE_TAKEN is present in string
+                if created_profile_string.contains("HANDLE_TAKEN") {
+                    created_profile = Err(String::from("Handle taken"));
+                } else {
+                    let created_profile_data: crate::lens::profile::create::CreateProfileData =
+                        serde_json::from_str(&created_profile_string).unwrap();
+                    created_profile = Ok(created_profile_data);
+                }
             } else {
                 created_profile = Err(format!(
                     "Error creating profile with status code : {:?}",
@@ -163,4 +168,29 @@ pub fn get_profiles_by_address(
         }
     });
     profile
+}
+
+pub fn get_recommended_profiles(
+    lens_client: &crate::lens::LensClient,
+) -> Result<crate::lens::profile::recommended::RecommendedProfilesData, String> {
+    let queries = crate::graphql::queries::Queries::new();
+    let query = queries.profile.recommended_profiles;
+
+    let mut profiles = Err(String::new());
+    async_std::task::block_on(async {
+        if let Ok(mut p) = lens_client.make_request(crate::graphql::Query { query: query }, None) {
+            if p.status().is_success() {
+                let profile_string = p.body_string().await.unwrap();
+                let profile_data: crate::lens::profile::recommended::RecommendedProfilesData =
+                    serde_json::from_str(&profile_string).unwrap();
+                profiles = Ok(profile_data);
+            } else {
+                profiles = Err(format!(
+                    "Error retrieving recommended profiles with status code : {:?}",
+                    p.status()
+                ));
+            }
+        }
+    });
+    profiles
 }
