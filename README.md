@@ -7,39 +7,9 @@ See on the bottom to see what this currently supports.
   <p align="center">Rust client crate for https://lens.xyz </a></p>
 </p>
 
-## Usage
+## Examples
 
-```Rust
-use lens_client;
-use lens_client::{Chain, Net};
-
-fn main(){
-    let address = "0x0000000000000000000000000000000000000000";
-    let client = lens_client::lens::LensClient::new(Chain::Polygon, Net::Main);
-
-    let default_profile = client.get_default_profile_by_address(String::from(address));
-
-    match default_profile {
-        Ok(profile) => {
-            println!("{:?}", profile);
-            let profile_id = profile.data.default_profile.id;
-            let followers = client.get_followers(profile_id,10);
-
-            match followers {
-                Ok(followers) => {
-                    println!("{:?}", followers);
-                }
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            }
-        }
-        Err(e) => {
-            println!("{:?}", e);
-        }
-    }
-}
-```
+See the examples folder
 
 ### Functionalities
 
