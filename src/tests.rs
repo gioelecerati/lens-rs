@@ -7,7 +7,7 @@ mod tests {
 
     #[test]
     pub fn test_existing_user() {
-        let client = lens::LensClient::new(Chain::Polygon, Net::Mumbai);
+        let client = lens::LensClient::new(Chain::Polygon, Net::Main);
         let user_profiles = client.get_profiles_by_address(String::from(TEST_ADDRESS));
 
         let mut profile_id = String::new();
@@ -18,7 +18,7 @@ mod tests {
                     profile_id = item.id;
                     println!("PROFILE NAME: {:?}", item.name);
 
-                    assert_eq!(item.handle, "gioele.test");
+                    assert_eq!(item.handle, "gioele.lens");
 
                     println!("PROFILE HANDLE: {:?}", item.handle);
                     println!("PROFILE OWNED_BY: {:?}", item.owned_by);
@@ -35,7 +35,7 @@ mod tests {
                 let p = profile.data.default_profile.unwrap();
                 println!("DEFAULT PROFILE ID: {:?}", p.id);
                 profile_id = p.id;
-                assert_eq!(profile_id, "0x2c6d");
+                assert_eq!(profile_id, "0x2dfb");
                 println!("DEFAULT PROFILE NAME: {:?}", p.name);
                 println!("DEFAULT PROFILE HANDLE: {:?}", p.handle);
                 println!("DEFAULT PROFILE OWNED_BY: {:?}", p.owned_by);
@@ -59,7 +59,7 @@ mod tests {
 
         println!("FOLLOWING LIST {:?}", following_list);
 
-        let followers = client.get_followers(String::from(profile_id), 10);
+        let followers = client.get_followers(String::from(profile_id.clone()), 10);
 
         let mut followers_list: Vec<String> = Vec::new();
         if let Ok(followers) = followers {
@@ -85,6 +85,14 @@ mod tests {
         } else {
             println!("Unable to generate challenge");
         }
+
+        let publications = client.get_publications(
+            profile_id.clone(),
+            10,
+            lens::publication::PublicationsType::OnlyComments,
+        );
+
+        println!("PUBLICATIONS: {:?}", publications);
     }
 
     #[test]
@@ -92,10 +100,10 @@ mod tests {
         let folder_path = "/tmp";
         let file_name = "lens_rs_wallet";
 
-        let mut w: Option<crate::crypto::Wallet> = None;
+        let mut _w: Option<crate::crypto::Wallet> = None;
 
         if std::path::Path::new(&format!("{}/{}", folder_path, file_name)).exists() {
-            w = Some(
+            _w = Some(
                 crate::crypto::load_wallet(
                     &folder_path.to_string(),
                     &file_name.to_string(),
@@ -104,7 +112,7 @@ mod tests {
                 .unwrap(),
             );
         } else {
-            w = Some(
+            _w = Some(
                 crypto::generate_wallet(
                     String::from(folder_path),
                     String::from("password"),
@@ -115,7 +123,7 @@ mod tests {
             );
         }
 
-        let wallet = w.unwrap();
+        let wallet = _w.unwrap();
 
         println!("{:?}", wallet.address);
 
@@ -165,6 +173,11 @@ mod tests {
         } else {
             println!("Unable to create profile");
         };
+
+        //let verify_token = client.verify().unwrap();
+        //println!("Verify token: {:?}", verify_token);
+        let refresh_token = client.refresh().unwrap();
+        println!("Refresh token: {:?}", refresh_token);
 
         let get_profiles = client.get_profiles_by_address(user_address.clone());
 

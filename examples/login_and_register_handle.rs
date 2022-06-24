@@ -1,7 +1,7 @@
 use lens_client;
 use lens_client::{Chain, Net};
 
-fn main(){
+fn main() {
     // Address of registering user
     let address = String::from("0x0000000000000000000000000000000000000000");
 
@@ -14,12 +14,16 @@ fn main(){
     // This works if you load a key store wallet using the load_wallet method or you generate a new wallet using the generate_wallet method.
     // In all the other cases, the challenge_text should be sent to the user and the user should sign the challenge_text.
     // The signature should be sent back to the server and the server should verify the signature.
+    let wallet = lens_client::crypto::load_wallet(
+        &"path/to/keystore/file".to_string(),
+        &"filename".to_string(),
+        "password".to_string(),
+    )
+    .unwrap();
     let challenge_signature = lens_client::crypto::sign_message(&wallet, challenge_text.as_bytes());
 
     // This retrieve an access_token and make it available to client.access_token
-    let login_result = client
-        .login(address.clone(), challenge_signature)
-        .unwrap();
+    let login_result = client.login(address.clone(), challenge_signature).unwrap();
 
     // Create a unique handle
     // In this example it's using the first 8 characters of the address

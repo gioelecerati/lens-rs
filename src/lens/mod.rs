@@ -1,6 +1,7 @@
 pub mod auth;
 pub mod follow;
 pub mod profile;
+pub mod publication;
 
 pub struct LensClient {
     pub endpoint: String,
@@ -37,6 +38,16 @@ impl LensClient {
                 },
             },
         }
+    }
+
+    /// Ping
+    /// # Arguments
+    /// * `lens_client` - The LensClient
+    /// # Return
+    /// * `Result<String, String>` - The result of the ping
+    pub fn ping(&self) -> Result<String, String> {
+        let pong = crate::methods::ping(self);
+        pong
     }
 
     /// Get the profiles of a user by address
@@ -148,6 +159,36 @@ impl LensClient {
         auth
     }
 
+    /// Verify the access token
+    /// # Returns
+    /// * `Result<auth::verify::VerifyData, String>` - The verification data
+    pub fn verify(&self) -> Result<auth::verify::VerifyData, String> {
+        let mut auth = Err(String::from(
+            "Unable to verify access token, or no access token present in client",
+        ));
+        if self.access_token.is_some() {
+            let a = self.access_token.clone().unwrap().clone();
+            auth = crate::methods::auth::verify(self, &a);
+        }
+        auth
+    }
+
+    /// Refresh the auth token
+    /// # Returns
+    /// * `Result<auth::refresh::RefreshData, String>` - The auth token to login to Lens
+    pub fn refresh(&mut self) -> Result<auth::refresh::RefreshData, String> {
+        let mut auth = Err(String::from(
+            "Unable to refresh access token, or no refresh token present in client",
+        ));
+        if self.refresh_token.is_some() {
+            let r = self.refresh_token.clone().unwrap().clone();
+            auth = crate::methods::auth::refresh(self, &r);
+            self.access_token = Some(auth.clone().unwrap().data.refresh.access_token);
+            self.refresh_token = Some(auth.clone().unwrap().data.refresh.refresh_token);
+        }
+        auth
+    }
+
     /// Create a Lens profile
     /// # Arguments
     /// * `handle` - The handle of the user
@@ -170,6 +211,28 @@ impl LensClient {
             profile,
         );
         created_profile
+    }
+
+    /// Get publications by profile id
+    /// # Arguments
+    /// * `profile_id` - The profile id of the user
+    /// * `limit` - The amount of the returned publications
+    /// * `publications_type` - The type of the publications
+    /// # Returns
+    /// * `Result<crate::lens::publication::publication::PublicationsData, String>` - The publications of the user
+    pub fn get_publications(
+        &self,
+        profile_id: String,
+        limit: i64,
+        publications_type: crate::lens::publication::PublicationsType,
+    ) -> Result<crate::lens::publication::PublicationData, String> {
+        let publications = crate::methods::publication::get_publications(
+            self,
+            profile_id,
+            limit,
+            publications_type,
+        );
+        publications
     }
 
     pub fn make_request(

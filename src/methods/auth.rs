@@ -71,3 +71,74 @@ pub fn login(
     });
     login
 }
+
+pub fn refresh(
+    lens_client: &crate::lens::LensClient,
+    refresh_token: &String,
+) -> Result<crate::lens::auth::refresh::RefreshData, String> {
+    let queries = crate::graphql::queries::Queries::new();
+    let query = queries.user.refresh;
+
+    let mut refresh = Err(String::new());
+
+    let q = crate::graphql::parse(
+        query,
+        vec![crate::graphql::QVar {
+            name: "REFRESH_TOKEN".to_string(),
+            value: refresh_token.clone(),
+        }],
+    );
+
+    async_std::task::block_on(async {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
+            if p.status().is_success() {
+                let refresh_string = p.body_string().await.unwrap();
+                let refresh_data: crate::lens::auth::refresh::RefreshData =
+                    serde_json::from_str(&refresh_string).unwrap();
+                refresh = Ok(refresh_data);
+            } else {
+                refresh = Err(format!(
+                    "Error refreshing with status code : {:?}",
+                    p.status()
+                ));
+            }
+        }
+    });
+    refresh
+}
+
+pub fn verify(
+    lens_client: &crate::lens::LensClient,
+    access_token: &String,
+) -> Result<crate::lens::auth::verify::VerifyData, String> {
+    let queries = crate::graphql::queries::Queries::new();
+    let query = queries.user.verify;
+
+    let mut verify = Err(String::new());
+
+    let q = crate::graphql::parse(
+        query,
+        vec![crate::graphql::QVar {
+            name: "ACCESS_TOKEN".to_string(),
+            value: access_token.clone(),
+        }],
+    );
+
+    println!("QUERY: {}", q.query);
+    async_std::task::block_on(async {
+        if let Ok(mut p) = lens_client.make_request(q, None) {
+            if p.status().is_success() {
+                let verify_string = p.body_string().await.unwrap();
+                let verify_data: crate::lens::auth::verify::VerifyData =
+                    serde_json::from_str(&verify_string).unwrap();
+                verify = Ok(verify_data);
+            } else {
+                verify = Err(format!(
+                    "Error verifying with status code : {:?}",
+                    p.status()
+                ));
+            }
+        }
+    });
+    verify
+}

@@ -28,3 +28,5 @@ hex = "0.4.3"
 secp256k1 = {version = "0.21.3", features = ["recovery", "global-context", "bitcoin_hashes"]}
 eth_checksum = "0.1.2"
 ethers-signers = "0.13.0"
+convert_case = "0.5.0"
+serde-value = "0.7.0"

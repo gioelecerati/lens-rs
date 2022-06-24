@@ -13,6 +13,7 @@ See the examples folder
 
 ### Functionalities
 
+- [X] Ping
 #### Profile
 - [X] Profile : get default profile
 - [X] Profile : get profiles
@@ -25,5 +26,10 @@ See the examples folder
 #### Auth
 - [X] Auth    : get challenge
 - [X] Auth    : login
+- [X] Auth    : refresh
+- [X] Auth    : verify
+
+### Publications
+- [X] Pub     : get publications (posts, comments, mirrors)
 
 This crate integrates some functions to handle local KeyStores and use them to interact with Lens, mostly useful for development purposes.
